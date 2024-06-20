@@ -1,0 +1,121 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+jspm_packages/
+bower_components/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# dotenv environment variables file
+.env
+.env.test
+.env.production
+
+
+# Next/Nuxt.js
+.next/
+out/
+.nuxt/
+dist/
+
+# Angular
+.angular/
+
+# Build directories
+dist/
+build/
+out/
+
+# Gatsby files
+.cache/
+public/
+
+# Static site generators
+.jekyll-cache/
+.docusaurus/
+.vitepress/
+.hugo/
+.parcel
+
+# Serverless
+.serverless/
+.serverless_plugins/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# WebStorm
+.idea/
+
+# Python
+__pycache__/
+*.env
+.venv
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# PyCharm
+.idea/
+.vscode/
+*.pyc
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+media
+
+# Flask
+instance/
+.webassets-cache
+
+# Compiled source
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# VSCode
+.vscode/
+.vs/
+
+# Some OS and weird stuff
+*.csproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.DS_Store
+
+# JetBrains Rider
+.idea/
