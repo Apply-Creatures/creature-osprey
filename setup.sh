@@ -1,41 +1,71 @@
 #!/bin/bash
 
-source ~/.bashrc
+RAD_VERSION="1.0.0-rc.10"
+LINUX_SYSTEM="x86_64-unknown-linux-musl"
+OS_TARGET="${RAD_VERSION}-${LINUX_SYSTEM}"
 
-eval `ssh-agent`
+echo $OS_TARGET
 
-echo  "Started ssh agent"
+pwd
 
-rad --version
+curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz
 
-mkdir -p ~/radicle/profiles/creatures-breeder/.radicle
+echo "Installed ${OS_TARGET} successfully."
 
-export RAD_HOME=~/radicle/profiles/creatures-breeder/.radicle
-export RAD_PASSPHRASE=applycreatures
+curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz.sig
 
-rad auth --alias creatures-breeder
+echo "Installed ${OS_TARGET} signature file successfully."
 
-rad self
+curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz.sha256
 
-cd ~/radicle/profiles/creatures-breeder/.radicle
+echo "Installed ${OS_TARGET} checksum successfully."
 
-cat config.json
+ls -l
 
-config_file="config.json"
-external_address="creature-radicle.fly.dev:8776"
-listen="0.0.0.0:8776"
+# Verify the signature
+ssh-keygen -Y check-novalidate -n file -s radicle-$OS_TARGET.tar.xz.sig < radicle-$OS_TARGET.tar.xz
 
-jq --arg external_address "$external_address" --arg listen "$listen" '.node.externalAddresses = [$external_address] | .node.listen = [$listen]' "$config_file" > tmp.$$.json && mv tmp.$$.json $config_file
+# Verify the checksum
+sha256sum -c radicle-$OS_TARGET.tar.xz.sha256
 
-cat config.json
+#-------------------------------------------------------------------------------------------------------
 
-rad node start --foreground
+# source ~/.bashrc
 
-echo "start node successfully"
+# eval `ssh-agent`
 
-echo "the radicle address is $(rad node config --addresses)."
+# echo  "Started ssh agent"
 
-echo "setup.sh script is completed"
+# rad --version
+ 
+# mkdir -p ~/radicle/profiles/creatures-breeder/.radicle
+
+# export RAD_HOME=~/radicle/profiles/creatures-breeder/.radicle
+# export RAD_PASSPHRASE=applycreatures
+
+# rad auth --alias creatures-breeder
+
+# rad self
+
+# cd ~/radicle/profiles/creatures-breeder/.radicle
+
+# cat config.json
+
+# config_file="config.json"
+# external_address="creature-radicle.fly.dev:8776"
+# listen="0.0.0.0:8776"
+
+# jq --arg external_address "$external_address" --arg listen "$listen" '.node.externalAddresses = [$external_address] | .node.listen = [$listen]' "$config_file" > tmp.$$.json && mv tmp.$$.json $config_file
+
+# cat config.json
+
+# rad node start --foreground
+
+# echo "start node successfully"
+
+# echo "the radicle address is $(rad node config --addresses)."
+
+# echo "setup.sh script is completed"
 
 
 
