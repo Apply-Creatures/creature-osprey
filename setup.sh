@@ -1,71 +1,85 @@
 #!/bin/bash
 
-RAD_VERSION="1.0.0-rc.10"
-LINUX_SYSTEM="x86_64-unknown-linux-musl"
-OS_TARGET="${RAD_VERSION}-${LINUX_SYSTEM}"
+# Path to be added
+RAD_PATH='export PATH="$PATH:/home/seed/.radicle/bin"'
+export PATH="/home/seed/.radicle/bin:${PATH}"
 
-echo $OS_TARGET
+# Set permissions to seed user
+chmod u+x /home/seed/.radicle/bin/rad
+chmod u+x /home/seed/.radicle/bin/radicle-node
+chmod u+x /home/seed/.radicle/bin/git-remote-rad
 
-pwd
+# Check if the RAD_PATH is already added into .bashrc file or not.
+# If not, proceed to add.
+if ! grep -q "$RAD_PATH" ~/.bashrc; then
+    echo -e "\n# Added by Radicle.\n$RAD_PATH" >> ~/.bashrc
+    echo "Radicle path added to ~/.bashrc"
+else
+    echo "Radicle path already exists in ~/.bashrc"
+fi
 
-curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz
+# Apply changes to the .bashrc file
+source ~/.bashrc
 
-echo "Installed ${OS_TARGET} successfully."
+echo $PATH
 
-curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz.sig
+# Check if the rad command exists or not
+if command -v rad &> /dev/null; then
+    rad --version
+else
+    echo "Rad command still not found"
+fi
 
-echo "Installed ${OS_TARGET} signature file successfully."
 
-curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz.sha256
+# mkdir -p /home/seed/.ssh
+# touch /home/seed/.ssh/id_rsa
+# SSH_KEY_PATH=/home/seed/.ssh/id_rsa
 
-echo "Installed ${OS_TARGET} checksum successfully."
+# Start the SSH agent
+eval `ssh-agent`
+echo  "Started SSH agent!"
 
-ls -l
+# Add SSH key
+# ssh-add $SSH_KEY_PATH
 
-# Verify the signature
-ssh-keygen -Y check-novalidate -n file -s radicle-$OS_TARGET.tar.xz.sig < radicle-$OS_TARGET.tar.xz
+# Set read-only permission to the owner
+# chmod 600 $SSH_KEY_PATH
 
-# Verify the checksum
-sha256sum -c radicle-$OS_TARGET.tar.xz.sha256
+# cd /home/seed/.ssh && ls -l
+# cd ~
+
 
 #-------------------------------------------------------------------------------------------------------
 
-# source ~/.bashrc
 
-# eval `ssh-agent`
+# Create a directory to store the Radicle profile
+mkdir -p  ~/.radicle/profiles/creatures-breeder/
 
-# echo  "Started ssh agent"
+export RAD_HOME=~/.radicle/profiles/creatures-breeder/
+export RAD_PASSPHRASE=applycreatures
 
-# rad --version
- 
-# mkdir -p ~/radicle/profiles/creatures-breeder/.radicle
+# Initialize Radicle profile
+rad auth --alias creature-radicle.fly.dev && rad self
 
-# export RAD_HOME=~/radicle/profiles/creatures-breeder/.radicle
-# export RAD_PASSPHRASE=applycreatures
+cd ~/.radicle/profiles/creatures-breeder/
 
-# rad auth --alias creatures-breeder
+cat config.json
 
-# rad self
+# Set variables to be inserted into the Radicle's config.json file
+config_file="config.json"
+external_address="creature-radicle.fly.dev:8776"
+listen="0.0.0.0:8776"
 
-# cd ~/radicle/profiles/creatures-breeder/.radicle
+# Rename external_address and listen fields of the config.json file
+jq --arg external_address "$external_address" --arg listen "$listen" '.node.externalAddresses = [$external_address] | .node.listen = [$listen]' "$config_file" > tmp.$$.json && mv tmp.$$.json $config_file
 
-# cat config.json
+cat config.json
 
-# config_file="config.json"
-# external_address="creature-radicle.fly.dev:8776"
-# listen="0.0.0.0:8776"
+# Start the Radicle node
+rad node start --foreground
 
-# jq --arg external_address "$external_address" --arg listen "$listen" '.node.externalAddresses = [$external_address] | .node.listen = [$listen]' "$config_file" > tmp.$$.json && mv tmp.$$.json $config_file
+echo "Started the Radicle node successfully! 🥳"
 
-# cat config.json
+echo "The Radicle address is $(rad node config --addresses)."
 
-# rad node start --foreground
-
-# echo "start node successfully"
-
-# echo "the radicle address is $(rad node config --addresses)."
-
-# echo "setup.sh script is completed"
-
-
-
+echo "setup.sh script is completed."
