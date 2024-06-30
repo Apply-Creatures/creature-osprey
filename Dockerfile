@@ -1,5 +1,5 @@
 # Get ALPINE image
-FROM alpine:3.14
+FROM alpine:latest
 
 # Download DEBIAN packages
 RUN apk update && apk add --no-cache bash curl git openssl openssh jq
@@ -24,6 +24,12 @@ RUN mkdir -p /home/${USER}
 
 # Change the ownership of the working directory to seed
 RUN chown -R ${USER}:${GROUP} /home/${USER}
+
+COPY /apply-creatures /home/${USER}/apply-creatures-private
+
+# RUN cd /home/${USER}/apply-creatures-private && pwd
+
+RUN chown -R ${USER}:${GROUP} /home/${USER}/apply-creatures-private
 
 # Set the user for subsequent instructions
 USER ${USER}
@@ -60,6 +66,8 @@ RUN tar -xvJf radicle-$OS_TARGET.tar.xz --strip-components=1 -C ~/.radicle
 
 # Set the PORT
 EXPOSE 8776
+
+RUN ls -la /home/${USER}/apply-creatures-private
 
 # RUN ["/setup.sh"]
 
