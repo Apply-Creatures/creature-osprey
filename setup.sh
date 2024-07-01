@@ -31,8 +31,6 @@ fi
 source ~/.bashrc
 echo "Applied changes to the .bashrc file."
 
-# echo $PATH
-
 # Check if the rad command exists or not
 echo "Radicle version: "
 if command -v rad &> /dev/null; then
@@ -46,7 +44,7 @@ fi
 mkdir -p  ~/.radicle/profiles/seeder/
 
 export RAD_HOME=~/.radicle/profiles/seed/
-export RAD_PASSPHRASE=applycreatures
+export RAD_PASSPHRASE=yourpassphrase
 
 # Start the SSH agent
 eval `ssh-agent`
@@ -62,7 +60,6 @@ cd ~/.radicle/profiles/seed/
 # Set variables to be inserted into the Radicle's config.json file
 config_file="config.json"
 external_address="creature-radicle.fly.dev:8776"
-# external_address="109.105.219.32:8776"
 listen="0.0.0.0:8776"
 
 # Rename external_address and listen fields of the config.json file
@@ -70,7 +67,6 @@ jq --arg external_address "$external_address" --arg listen "$listen" '.node.exte
 
 jq '.preferredSeeds = []' $config_file > tmp.$$.json && mv tmp.$$.json config.json
 
-cat config.json
 
 # Start the Radicle node
 rad node start
@@ -83,7 +79,8 @@ echo "The Radicle address is $(rad node config --addresses)."
 
 cd ~/apply-creatures-private && pwd && ls -l
 
-# echo "Initializing the Git repository."
+
+# Initializing the Git repository
 git init --initial-branch=main
 git config --global user.email "bachvo01@gmail.com"
 git config --global user.name "Bachiro"
@@ -102,19 +99,33 @@ output=$(rad init ~/apply-creatures-private --name "apply-creatures-private" \
 echo "Pushing to main branch..."
 git push rad main
 
-razer_did=did:key:z6MkmesFj9djBn5dyH4vMEAjZeBjCb1BYhKgBMtC2EeeknHn
+# Peers ID
+bachiro_one_did=did:key:z6MkmesFj9djBn5dyH4vMEAjZeBjCb1BYhKgBMtC2EeeknHn
+bachiro_two_did=did:key:z6MkttLTb5NFW3hdMcgTT6f7FW6m7gkE6kosR2uEhg8dJmb1
+hirako_did=did:key:z6MknzVNznWdLv1Tj19pLzDsXF5D6SHhjWK6WiMCtop6FK4K 
 
 rad seed $(rad .) --scope followed
-rad follow $razer_did
 
+rad follow $bachiro_one_did
+rad follow $bachiro_two_did
+rad follow $hirako_did
+
+# Register peer 1 to the repository
+echo "Registering peers..."
 rad id update --title "Update node delegate and access" \
-              --description "Add the new delegate and node's access for other peers." \
-              --delegate $razer_did \
-              --allow $razer_did \
-              --no-confirm
+              --description "Add peers as new delegates and permit access to the repository." \
+              --delegate $bachiro_one_did \
+              --delegate $bachiro_two_did \
+              --delegate $hirako_did \
+              --allow $bachiro_one_did \
+              --allow $bachiro_two_did \
+              --allow $hirako_did \
+              --no-confirm 
+
 
 echo "Update Radicle repository..."
-rad .
+echo "Your RID is $(rad .)"
+
 rad id 
 
 echo "setup.sh script is completed!"

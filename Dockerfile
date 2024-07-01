@@ -65,7 +65,7 @@ RUN mkdir .radicle
 RUN tar -xvJf radicle-$OS_TARGET.tar.xz --strip-components=1 -C ~/.radicle
 
 # Set the PORT
-EXPOSE 8776
+# EXPOSE 8776
 
 RUN ls -la /home/${USER}/apply-creatures-private
 
