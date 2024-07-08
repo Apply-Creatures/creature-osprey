@@ -1,20 +1,30 @@
-# fly.toml app configuration file generated for creature-radicle on 2024-06-17T15:42:12+07:00
+# fly.toml app configuration file generated for creature-radicle on 2024-07-01T10:53:03+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = 'creature-radicle'
-primary_region = 'hkg'
+primary_region = 'waw'
 
 [build]
 
 [http_service]
-  internal_port = 8776
-  force_https = true
+  internal_port = 80
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 8776
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[services.ports]]
+    port = 8776
 
 [[vm]]
   memory = '1gb'
