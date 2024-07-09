@@ -154,11 +154,10 @@ docker build --no-cache -t radicle-node-image .
 docker run --name radicle-node-container -dp 8776:8776 radicle-node-image
 ```
 
-### Deploy
+### Deploy on fly.io
 
 Best is to deploy the thing somewhere. Here is how:
 
-#### Deploy on fly.io
 
 **a. "<em>Pigeon! Fly!</em>" - Launch**
 
