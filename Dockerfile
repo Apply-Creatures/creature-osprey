@@ -75,9 +75,3 @@ ENV REPO_NAME=creature-pigeon
 
 
 ENTRYPOINT ["/initializer.sh"]
-
-
-
-
-
-

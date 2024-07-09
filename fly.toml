@@ -18,6 +18,7 @@ primary_region = 'waw'
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
+  max_machines_running = 1
   min_machines_running = 0
   processes = ['app']
 
@@ -26,6 +27,7 @@ primary_region = 'waw'
   internal_port = 8776
   auto_stop_machines = true
   auto_start_machines = true
+  max_machines_running = 1
   min_machines_running = 0
   processes = ['app']
 
