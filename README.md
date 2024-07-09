@@ -12,7 +12,7 @@
 <br />
 <div align="center">
 
-  <h3 align="center">Radicle Seed Node Creature</h3>
+  <h3 align="center">Creature Pigeon</h3>
 
    <a href="#">
       <img src="./images/radicle-logo.png" alt="Radicle logo" width="30%">
@@ -94,22 +94,22 @@ So I created a container that can run a Radicle seed node anywhere in any enviro
 * Shell script to set everything up
 * Deployment tested on some PaaS
 * An acceptance security posture
-* Web server for Radicle brwoser UI and convenience
+* Web server for Radicle browser UI and convenience
 * A separate mount for repositories so that only git repos data gets backed up
 
 Of course, nothing is perfect, but I will try to keep this up to date and fix issues right here.
-If you've truly tried everything and still can't get this to work for you, try to reach out. Or raise an issue. But I make no promise
+If you've truly tried everything and still can't get this to work for you, try to reach out. Or raise an issue. But I make no promise.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 
 - [docker](https://docker.com) - of course, but [you don't have to](https://opencontainers.org/).
-- [radicle](https://radicle.xyz/) - that's beast
+- [radicle](https://radicle.xyz/) - that's beast!
 
 ### Also using
 
-- [caddy](https://caddyserver.com/) - as reverse proxy. Because why not caddy. 
+- [caddy](https://caddyserver.com/) - as reverse proxy. Because why not **caddy**. 
 
 
 <hr/>
@@ -122,14 +122,19 @@ If you've truly tried everything and still can't get this to work for you, try t
 
 - you need [Docker](https://docker.com) installed
 - or [podman](https://podman.io) or something that can handle containers
+- you need `ssh-agent`
+- you may need to install [fly.io](https://fly.io) to test it on the cloud environment. (Optional)
 
 ### Set up and run locally
 
 ```bash
-$ git clone https://github.com/apply-creatures/radicle-seed-node.git
+$ git clone https://github.com/apply-creatures/creature-pigeon.git
 ```
 
 Navigate to the repo root's folder and build the container
+```bash
+$ cd ./creature-pigeon
+```
 
 1. Build the Docker Image
 
@@ -146,26 +151,126 @@ docker build --no-cache -t radicle-node-image .
 2. Run the docker container
 
 ```bash
-docker run -dp 8776:8776 radicle-node-container
+docker run --name radicle-node-container -dp 8776:8776 radicle-node-image
 ```
 
-### Deploy
+### Deploy on fly.io
 
-Best is to deploy the thing somewhere. Here is how
+Best is to deploy the thing somewhere. Here is how:
 
-#### Deploy on fly.io
 
-**First time**
+**a. "<em>Pigeon! Fly!</em>" - Launch**
 
 ```bash
+# This command will setup your container and deploy it right away. It will create 2 virtual machines by default.  
 $ fly launch
 ```
 
-**Redeploy**
+
+```bash
+# Use this command if you don't want auto scaling/immediate deploy for your container.
+$ fly launch --no-deploy --ha=false
+```
+
+**b. Set the secrets for your Radicle identity**
+
+```bash
+$ fly secrets set RAD_PASSPHRASE=secretpassphrase
+```
+
+**c. Create volume for your Radicle container**
+```bash
+# This creates a volume called radicle_volumes in region waw (Kraków)
+$ fly volumes create radicle_volumes -r waw
+```
+
+**d. Deploy**
 
 ```bash
 $ fly deploy
 ```
+
+**Note**: You can use this command to re-deploy the container when changes were made, or when `--no-deploy` tag was used in the `fly launch` command to deploy the app.
+
+If there is any confusion trying to deploy, please visit [fly.io](https://fly.io/docs) to have further understandings.
+
+### Connect to your Radicle container node
+Once you have successfully run you container locally or remotely, it is time to make connections to your containerized Radicle seed node. In order to do so, you need to do some configurations to your host Radicle node. 
+
+**Note:** Make sure you stop your host Radicle node before performing these steps.
+
+1. Navigate to your Radicle directory (normally `.radicle`)
+```bash
+# This directory contains all configurations and files needed to start your node
+$ cd /path/to/.radicle
+```
+
+2. Add the container node's address to some fields of the `config.json` file and save your changes
+
+```bash
+{  
+   "preferredSeeds": ["<node-address>"],
+   ...
+   "node": {
+      "listen": ["0.0.0.0:8776"],
+      ...
+      "connect": ["<node-address>"],
+      "externalAddresses": ["<your-hostname>:<port>"],
+      ...
+   }
+}
+```
+
+3. Start your host Radicle seed node
+```bash
+$ eval `ssh-agent` # Start running SSH agent
+$ rad auth  # Add the keys to your Radicle identity
+$ rad node start # Start the host node
+```
+
+4. Connect to the host Radicle seed node
+```bash
+$ rad node connect <node-address>
+```
+
+5. Verify if the connection is successful or not
+```bash
+$ rad node status
+```
+
+A successful connection will have output similar to this
+```bash
+✓ Node is running and listening on 0.0.0.0:8776.
+
+╭────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ Peer                                               Address                         State       Since       │
+├────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ z6MkjvUk2LPQZmMhWEZ9qPjUUtG9zGXFYMUaxjMMLFXL1w8F   creature-radicle.fly.dev:8776   connected   2.214 seco… │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+2024-07-08T23:21:48.863+07:00 INFO  service  Received command QueryState(..)
+2024-07-08T23:21:49.328+07:00 INFO  service  Connected to z6MkjvUk2LPQZmMhWEZ9qPjUUtG9zGXFYMUaxjMMLFXL1w8F (creature-radicle.fly.dev:8776) (Outbound)
+2024-07-08T23:21:49.329+07:00 INFO  service  Connected to z6MkpzcieiF9gDXHHNMfpEzf6D6FjD5wFfYz457DHi5isSnh (creature-radicle.fly.dev:8776) (Outbound)
+2024-07-08T23:21:49.329+07:00 INFO  service  Connected to z6MksCFEJVyHBpGNY5Ln3q5oJYE84choMFULnGzMjHLZQhH8 (creature-radicle.fly.dev:8776) (Outbound)
+2024-07-08T23:21:49.633+07:00 INFO  service  Disconnected from z6MkpzcieiF9gDXHHNMfpEzf6D6FjD5wFfYz457DHi5isSnh (connection reset)
+2024-07-08T23:21:49.652+07:00 WARN  service  Not enough available peers to connect to (available=0, target=8)
+2024-07-08T23:21:49.879+07:00 INFO  service  Disconnected from z6MksCFEJVyHBpGNY5Ln3q5oJYE84choMFULnGzMjHLZQhH8 (connection reset)
+2024-07-08T23:21:49.898+07:00 WARN  service  Not enough available peers to connect to (available=0, target=8)
+2024-07-08T23:21:51.213+07:00 INFO  service  Received command ListenAddrs
+2024-07-08T23:21:51.214+07:00 INFO  service  Received command QueryState(..)
+```
+
+
+### Clone the Radicle repository
+After successfully connected to the container seed node, all is left for us to do is to clone the Radicle repository to start working on it. 
+
+```bash
+$ rad clone <repository-id> --scope followed
+```
+
+Congratulations! You've cloned the Radicle repository on your host machine. You can now proceed to make changes and contribute to the private repository.
+
+If you want to know how to push, checkout or issue to the Radicle repository, you can head to [Radicle](https://radicle.xyz/guides)'s guides to find your answers.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -177,7 +282,8 @@ $ fly deploy
 - [x] Write a Shell Script for automating setups.
 - [x] Test on local machine.
 - [x] Deploy to a PaaS.
-- [ ] Connect to deployed node from local machine.
+- [x] Connect to deployed node from local machine.
+- [x] Persist the Radicle identity and its configurations.
 - [ ] Safeguard the container from security concerns.
 
 <hr/>
