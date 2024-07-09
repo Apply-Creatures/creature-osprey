@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for creature-radicle on 2024-07-01T10:53:03+07:00
+# fly.toml app configuration file generated for creature-radicle on 2024-07-08T17:04:56+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -8,8 +8,14 @@ primary_region = 'waw'
 
 [build]
 
+[[mounts]]
+  source = 'radicle_volumes'
+  destination = '/home/seed/.radicle/seed'
+  initial_size = '1gb'
+
 [http_service]
-  internal_port = 80
+  internal_port = 443
+  force_https = true
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0

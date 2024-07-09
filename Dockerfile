@@ -1,5 +1,5 @@
 # Get ALPINE image
-FROM alpine:latest
+FROM alpine:3.14
 
 # Download DEBIAN packages
 RUN apk update && apk add --no-cache bash curl git openssl openssh jq
@@ -8,28 +8,24 @@ RUN apk update && apk add --no-cache bash curl git openssl openssh jq
 ENV USER=seed
 ENV GROUP=seed
 
-RUN echo "Successfully Downloaded Packages!"
-
 # Copy the shell script file to the container's filesystem.
-COPY setup.sh /setup.sh
+COPY initializer.sh /initializer.sh
 
 # Add execute permission to the setup.sh script file
-RUN chmod +x /setup.sh 
+RUN chmod +x /initializer.sh 
 
 # Add seed user and seed group to the system - Alpine
 RUN addgroup -S ${GROUP} && adduser -S -G ${GROUP} ${USER}
 
 # Make directory manually for Alpine
-RUN mkdir -p /home/${USER}
+RUN mkdir -p /home/${USER}/.radicle/${USER}
 
 # Change the ownership of the working directory to seed
 RUN chown -R ${USER}:${GROUP} /home/${USER}
 
-COPY /apply-creatures /home/${USER}/apply-creatures-private
+COPY /creature-pigeon /home/seed/creature-pigeon
 
-# RUN cd /home/${USER}/apply-creatures-private && pwd
-
-RUN chown -R ${USER}:${GROUP} /home/${USER}/apply-creatures-private
+RUN chown -R ${USER}:${GROUP} /home/seed/creature-pigeon
 
 # Set the user for subsequent instructions
 USER ${USER}
@@ -37,12 +33,10 @@ USER ${USER}
 # Set working directory to /home/seed
 WORKDIR /home/${USER}
 
-# Install the Radicle CLI
+# Define the version and system variables for installation
 ENV RAD_VERSION="1.0.0-rc.10"
 ENV LINUX_SYSTEM="x86_64-unknown-linux-musl"
 ENV OS_TARGET="${RAD_VERSION}-${LINUX_SYSTEM}"
-
-# RUN echo $OS_TARGET && pwd
 
 # Install the Radicle package
 RUN curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz
@@ -59,19 +53,28 @@ RUN ssh-keygen -Y check-novalidate -n file -s radicle-$OS_TARGET.tar.xz.sig < ra
 # Verify the Radicle checksum
 RUN sha256sum -c radicle-$OS_TARGET.tar.xz.sha256
 
-RUN mkdir .radicle 
-
 # Extract the Radicle pacakge
 RUN tar -xvJf radicle-$OS_TARGET.tar.xz --strip-components=1 -C ~/.radicle
 
-# Set the PORT
-# EXPOSE 8776
+# Set the execution permission for the extracted files
+RUN chmod u+x /home/seed/.radicle/bin/rad
+RUN chmod u+x /home/seed/.radicle/bin/radicle-node
+RUN chmod u+x /home/seed/.radicle/bin/git-remote-rad
 
-RUN ls -la /home/${USER}/apply-creatures-private
+ENV RAD_PATH_EXPORT='export PATH="$PATH:/home/$USER/.radicle/bin"'
+ENV RAD_PATH="/home/${USER}/.radicle/bin:${PATH}"
+ENV RAD_HOME=/home/seed/.radicle/seed/
 
-# RUN ["/setup.sh"]
+# Uncomment this and have your own Radicle passphrase if you need to run locally
+# ENV RAD_PASSPHRASE=yoursecret
 
-ENTRYPOINT ["/setup.sh"]
+ENV KEYS_DIR=/home/seed/.radicle/seed/keys/
+ENV REPO_DIR=/home/seed/.radicle/seed/creature-pigeon
+ENV RADICLE_REPO_STORAGE=/home/seed/.radicle/seed/storage/
+ENV REPO_NAME=creature-pigeon
+
+
+ENTRYPOINT ["/initializer.sh"]
 
 
 
