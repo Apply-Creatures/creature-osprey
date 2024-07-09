@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for creature-radicle on 2024-07-08T17:04:56+07:00
+# fly.toml app configuration file generated for creature-pigeon on 2024-07-09T19:29:56+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'creature-radicle'
+app = 'creature-pigeon'
 primary_region = 'waw'
 
 [build]
@@ -18,7 +18,6 @@ primary_region = 'waw'
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  max_machines_running = 1
   min_machines_running = 0
   processes = ['app']
 
@@ -27,7 +26,6 @@ primary_region = 'waw'
   internal_port = 8776
   auto_stop_machines = true
   auto_start_machines = true
-  max_machines_running = 1
   min_machines_running = 0
   processes = ['app']
 
