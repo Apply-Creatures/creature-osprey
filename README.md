@@ -335,7 +335,7 @@ It would never end. I've done this work not just off dozens of other people's op
 [repo-size-shield]: https://img.shields.io/github/repo-size/apply-creatures/creatrue-pigeon?style=for-the-badge
 [repo-size-url]: https://github.com/apply-creatures/creature-pigeon/archive/refs/heads/main.zip
 [product-screenshot]: images/apply-creatures-logo.png
-[ci-shield]: https://ci.applycreatures.com/api/badges/2/status.svg
+[ci-shield]: https://ci.applycreatures.com/api/badges/5/status.svg
 [ci-url]: https://ci.applycreatures.com/repos/5
 [floss-shield]: https://www.bestpractices.dev/projects/9206/badge?style=for-the-badge
 [floss-url]: https://www.bestpractices.dev/projects/9206

@@ -25,11 +25,10 @@ To contribute, follow these steps:
 ## Code Style
 
 - Follow the existing code style and conventions used in the project.
-- Ensure your code passes linting (`npm run lint`) and tests (`npm test`).
 
 ## Reporting Issues
 
-If you encounter bugs or have suggestions for improvements, please [create an issue](https://github.com/apply-creatures/creature-shoveler/issues/new) on GitHub. Include details such as:
+If you encounter bugs or have suggestions for improvements, please [create an issue](https://github.com/apply-creatures/creature-pigeon/issues/new) on GitHub. Include details such as:
 
 - Steps to reproduce
 - Expected behavior
