@@ -64,6 +64,7 @@ RUN chmod u+x /home/seed/.radicle/bin/git-remote-rad
 ENV RAD_PATH_EXPORT='export PATH="$PATH:/home/$USER/.radicle/bin"'
 ENV RAD_PATH="/home/${USER}/.radicle/bin:${PATH}"
 ENV RAD_HOME=/home/seed/.radicle/seed/
+ENV RAD_ALIAS=creature-pigeon
 
 # Uncomment this and have your own Radicle passphrase if you need to run locally
 # ENV RAD_PASSPHRASE=yoursecret
@@ -73,5 +74,9 @@ ENV REPO_DIR=/home/seed/.radicle/seed/creature-pigeon
 ENV RADICLE_REPO_STORAGE=/home/seed/.radicle/seed/storage/
 ENV REPO_NAME=creature-pigeon
 
+# Peers DID
+ENV RADICLE_PEER_ONE=did:key:z6MkmesFj9djBn5dyH4vMEAjZeBjCb1BYhKgBMtC2EeeknHn
+ENV RADICLE_PEER_TWO=did:key:z6MkttLTb5NFW3hdMcgTT6f7FW6m7gkE6kosR2uEhg8dJmb1
+ENV RADICLE_PEER_THREE=did:key:z6MknzVNznWdLv1Tj19pLzDsXF5D6SHhjWK6WiMCtop6FK4K
 
 ENTRYPOINT ["/initializer.sh"]

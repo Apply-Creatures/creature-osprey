@@ -1,38 +1,42 @@
-# fly.toml app configuration file generated for creature-pigeon on 2024-07-09T19:29:56+07:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
+  # fly.toml app configuration file generated for creature-pigeon on 2024-07-12T16:24:23+07:00
+  #
+  # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+  #
 
-app = 'creature-pigeon'
-primary_region = 'waw'
+  app = 'creature-pigeon'
+  primary_region = 'waw'
 
-[build]
+  [build]
 
-[[mounts]]
-  source = 'radicle_volumes'
-  destination = '/home/seed/.radicle/seed'
-  initial_size = '1gb'
+  [[mounts]]
+    source = 'radicle_volumes'
+    destination = '/home/seed/.radicle/seed'
+    initial_size = '1gb'
+    processes = ['app']
 
-[http_service]
-  internal_port = 443
-  force_https = true
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+  [http_service]
+    internal_port = 80
+    force_https = true
+    auto_stop_machines = true
+    auto_start_machines = true    
+    min_machines_running = 0
+    processes = ['app']
 
-[[services]]
-  protocol = 'tcp'
-  internal_port = 8776
-  auto_stop_machines = true
-  auto_start_machines = true
-  min_machines_running = 0
-  processes = ['app']
+  [[services]]
+    protocol = 'tcp'
+    internal_port = 8776
+    auto_stop_machines = true
+    auto_start_machines = true
 
-  [[services.ports]]
-    port = 8776
+    [[services.ports]]
+      port = 8776
+      handlers = ['tls']
 
-[[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
-  cpus = 1
+    [[services.tcp_checks]]
+      interval = '5s'
+      timeout = '1s'
+
+  [[vm]]
+    memory = '1gb'
+    cpu_kind = 'shared'
+    cpus = 1
