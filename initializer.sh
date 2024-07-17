@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "RAD_PASSPHRASE is $RAD_PASSPHRASE"
-
 echo "Move the directory to the destination folder..."
 cp -r /home/seed/creature-pigeon /home/seed/.radicle/seed/
 
@@ -39,7 +37,7 @@ if [ -d $KEYS_DIR ]; then
     echo "Signed in Radicle identity successfully ✅." 
 else
     echo "The keys folder does not exist. Initializing new Radicle identity..."
-    rad auth --alias creature-radicle.fly.dev && echo "Initialized Radicle identity successfully ✅." 
+    rad auth --alias "$RAD_ALIAS.fly.dev" && echo "Initialized Radicle identity successfully ✅." 
     rad self
 
     # Navigate to the seed folder
@@ -67,6 +65,10 @@ echo "Starting the Radicle node..."
 rad node start
 
 echo "Started the Radicle node successfully! 🥳"
+
+rad node status 
+
+rad config 
 
 # Display the Radicle node address
 echo "Your Radicle node address is $(rad node config --addresses)."
@@ -114,28 +116,28 @@ cd ~/.radicle/seed/creature-pigeon
 
 
         # Peers ID
-        bachiro_one_did=did:key:z6MkmesFj9djBn5dyH4vMEAjZeBjCb1BYhKgBMtC2EeeknHn
-        bachiro_two_did=did:key:z6MkttLTb5NFW3hdMcgTT6f7FW6m7gkE6kosR2uEhg8dJmb1
-        hirako_did=did:key:z6MknzVNznWdLv1Tj19pLzDsXF5D6SHhjWK6WiMCtop6FK4K 
+        peer_one=$RADICLE_PEER_ONE
+        peer_two=$RADICLE_PEER_TWO
+        peer_three=$RADICL_PEER_THREE 
 
         # Seed the Radicle repository
         rad seed $(rad .) --scope followed
 
         # Follow to peers
-        rad follow $bachiro_one_did
-        rad follow $bachiro_two_did
-        rad follow $hirako_did
+        rad follow $peer_one
+        rad follow $peer_two
+        rad follow $peer_three
                     
         # Register peers to the repository  
         echo "Registering peers..."
         rad id update --title "Update node delegate and access" \
                     --description "Add peers as new delegates and permit access to the repository." \
-                    --delegate $bachiro_two_did \
-                    --delegate $bachiro_one_did \
-                    --delegate $hirako_did \
-                    --allow $bachiro_two_did \
-                    --allow $bachiro_one_did \
-                    --allow $hirako_did \
+                    --delegate $peer_one \
+                    --delegate $peer_two \
+                    --delegate $peer_three \
+                    --allow $peer_one \
+                    --allow $peer_two \
+                    --allow $peer_three \
                     --no-confirm 
 
 

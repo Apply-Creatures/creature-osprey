@@ -7,6 +7,8 @@
 [![repo-size][repo-size-shield]][repo-size-url]
 [![Contributors][contributors-shield]][contributors-url]
 [![license][license-shield]][license-url]
+[![ci][ci-shield]][ci-url]
+[![OpenSSF Best Practices][floss-shield]][floss-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -199,6 +201,7 @@ Once you have successfully run you container locally or remotely, it is time to 
 
 **Note:** Make sure you stop your host Radicle node before performing these steps.
 
+
 1. Navigate to your Radicle directory (normally `.radicle`)
 ```bash
 # This directory contains all configurations and files needed to start your node
@@ -215,7 +218,7 @@ $ cd /path/to/.radicle
       "listen": ["0.0.0.0:8776"],
       ...
       "connect": ["<node-address>"],
-      "externalAddresses": ["<your-hostname>:<port>"],
+      "externalAddresses": ["<hostname>:<port>"],
       ...
    }
 }
@@ -230,7 +233,7 @@ $ rad node start # Start the host node
 
 4. Connect to the host Radicle seed node
 ```bash
-$ rad node connect <node-address>
+$ rad node connect <node-id@hostname:port>
 ```
 
 5. Verify if the connection is successful or not
@@ -280,10 +283,11 @@ If you want to know how to push, checkout or issue to the Radicle repository, yo
 
 - [x] Write a Dockerfile.
 - [x] Write a Shell Script for automating setups.
-- [x] Test on local machine.
+- [x] Have the container working on local machine.
 - [x] Deploy to a PaaS.
 - [x] Connect to deployed node from local machine.
 - [x] Persist the Radicle identity and its configurations.
+- [ ] Pass the FLOSS test (at least the "Passing badge")
 - [ ] Safeguard the container from security concerns.
 
 <hr/>
@@ -314,23 +318,27 @@ It would never end. I've done this work not just off dozens of other people's op
 
 <!-- Refs -->
 
-[codacy-url]: https://app.codacy.com/gh/apply-creatures/radicle-seed-node/dashboard
+[codacy-url]: https://app.codacy.com/gh/apply-creatures/creature-pigeon/dashboard
 [codacy-shield]: https://img.shields.io/codacy/grade/appid?style=for-the-badge
-[contributors-shield]: https://img.shields.io/github/contributors/apply-creatures/radicle-seed-node.svg?style=for-the-badge
-[contributors-url]: https://github.com/apply-creatures/radicle-seed-node/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/apply-creatures/radicle-seed-node.svg?style=for-the-badge
-[forks-url]: https://github.com/apply-creatures/radicle-seed-node/network/members
-[stars-shield]: https://img.shields.io/github/stars/apply-creatures/radicle-seed-node.svg?style=for-the-badge
-[stars-url]: https://github.com/apply-creatures/radicle-seed-node/stargazers
-[issues-shield]: https://img.shields.io/github/issues/apply-creatures/radicle-seed-node.svg?style=for-the-badge
-[issues-url]: https://github.com/apply-creatures/radicle-seed-node/issues
-[license-shield]: https://img.shields.io/github/license/apply-creatures/radicle-seed-node.svg?style=for-the-badge
-[license-url]: https://github.com/apply-creatures/radicle-seed-node/blob/main/LICENSE
-[score-shield]: https://img.shields.io/ossf-scorecard/github.com/apply-creatures/radicle-seed-node?style=for-the-badge
-[score-url]: https://github.com/apply-creatures/radicle-seed-node
-[repo-size-shield]: https://img.shields.io/github/repo-size/apply-creatures/radicle-seed-node?style=for-the-badge
-[repo-size-url]: https://github.com/apply-creatures/radicle-seed-node/archive/refs/heads/main.zip
+[contributors-shield]: https://img.shields.io/github/contributors/apply-creatures/creature-pigeon.svg?style=for-the-badge
+[contributors-url]: https://github.com/apply-creatures/creature-pigeon/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/apply-creatures/creature-pigeon.svg?style=for-the-badge
+[forks-url]: https://github.com/apply-creatures/creture-pigeon/network/members
+[stars-shield]: https://img.shields.io/github/stars/apply-creatures/creature-pigeon.svg?style=for-the-badge
+[stars-url]: https://github.com/apply-creatures/creature-pigeon/stargazers
+[issues-shield]: https://img.shields.io/github/issues/apply-creatures/creature-pigeon.svg?style=for-the-badge
+[issues-url]: https://github.com/apply-creatures/creature-pigeon/issues
+[license-shield]: https://img.shields.io/github/license/apply-creatures/creature-pigeon.svg?style=for-the-badge
+[license-url]: https://github.com/apply-creatures/creature-pigeon/blob/main/LICENSE
+[score-shield]: https://img.shields.io/ossf-scorecard/github.com/apply-creatures/creature-pigeon?style=for-the-badge
+[score-url]: https://github.com/apply-creatures/creature-pigeon
+[repo-size-shield]: https://img.shields.io/github/repo-size/apply-creatures/creatrue-pigeon?style=for-the-badge
+[repo-size-url]: https://github.com/apply-creatures/creature-pigeon/archive/refs/heads/main.zip
 [product-screenshot]: images/apply-creatures-logo.png
+[ci-shield]: https://ci.applycreatures.com/api/badges/5/status.svg
+[ci-url]: https://ci.applycreatures.com/repos/5
+[floss-shield]: https://www.bestpractices.dev/projects/9206/badge?style=for-the-badge
+[floss-url]: https://www.bestpractices.dev/projects/9206
 
 ## Changelog
 
