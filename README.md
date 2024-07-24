@@ -76,6 +76,8 @@ OK, DOkey
 
 ## About
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3c003037f1c549dd8e17f12fd5800702)](https://app.codacy.com/gh/Apply-Creatures/creature-pigeon?utm_source=github.com&utm_medium=referral&utm_content=Apply-Creatures/creature-pigeon&utm_campaign=Badge_Grade)
+
 This project is to facilitate launching and operating a Radicle Seed Node via docker containers. The goal is to automate the process of planting a Radicle Seed node in a Docker supported environment - removing the manual process of setting up and hosting the seed node on your local or remote machine.
 
 
