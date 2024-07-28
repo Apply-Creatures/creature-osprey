@@ -44,7 +44,6 @@ RUN mkdir -p /home/${USER}/.radicle/${USER}
 # Change the ownership of the working directory to seed
 RUN chown -R ${USER}:${GROUP} /home/${USER}
 
-COPY creature-pigeon /home/seed/creature-pigeon
 COPY radicle-httpd.service /etc/init.d/radicle-httpd
 RUN chmod +x /etc/init.d/radicle-httpd
 RUN rc-update add radicle-httpd default
