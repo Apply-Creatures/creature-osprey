@@ -115,9 +115,10 @@ ENV RADICLE_PEER_FOUR=did:key:z6Mksi9NQFoX7x16TnJKfTbzTcmik6CK5nqkkA88o3dicCHC
 
 # Setting up the UI explorer
 RUN git clone https://github.com/radicle-dev/radicle-interface.git radicle-explorer
-RUN cd radicle-explorer \
-    # switch to explorer version compatible with the version of radicle-httpd
-    && git checkout b105d06fae415769bd20b65f0f4346d40537be78 \
+
+WORKDIR /home/${USER}/radicle-explorer
+# switch to explorer version compatible with the version of radicle-httpd
+RUN git checkout b105d06fae415769bd20b65f0f4346d40537be78 \
     # need to nuke the lock file as it's broken
     && rm -rf package-lock.json \
     && $BUN_INSTALL/bin/bun install \
