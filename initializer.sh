@@ -27,17 +27,16 @@ echo "Starting SSH agent..."
 eval `ssh-agent`
 echo "Started SSH agent!"
 
-
 # Initialize Radicle profile
 
 if [ -d $KEYS_DIR ]; then
     echo "The keys folder exists. Re-use the existing keys..."
     rad auth
     rad self
-    echo "Signed in Radicle identity successfully ✅." 
+    echo "Signed in Radicle identity successfully ✅."
 else
     echo "The keys folder does not exist. Initializing new Radicle identity..."
-    rad auth --alias "$RAD_ALIAS.fly.dev" && echo "Initialized Radicle identity successfully ✅." 
+    rad auth --alias "$RAD_ALIAS.fly.dev" && echo "Initialized Radicle identity successfully ✅."
     rad self
 
     # Navigate to the seed folder
@@ -66,9 +65,9 @@ rad node start
 
 echo "Started the Radicle node successfully! 🥳"
 
-rad node status 
+rad node status
 
-rad config 
+rad config
 
 # Display the Radicle node address
 echo "Your Radicle node address is $(rad node config --addresses)."
@@ -80,7 +79,7 @@ cd ~/.radicle/seed/creature-pigeon
     if [ "$(ls -A $RADICLE_REPO_STORAGE)" ]; then
         echo "There are existing radicle repositories."
         echo "Your RID is $(rad .)"
-    else 
+    else
         echo "No existing Radicle repositories. Initializing new repository..."
 
         # Initialize the Git repository
@@ -94,7 +93,7 @@ cd ~/.radicle/seed/creature-pigeon
 
 
         # Add the current changes to the staging area
-        git add . 
+        git add .
 
         # Commit the changes
         git commit -m "👾 Initial commit"
@@ -118,7 +117,7 @@ cd ~/.radicle/seed/creature-pigeon
         # Peers ID
         peer_one=$RADICLE_PEER_ONE
         peer_two=$RADICLE_PEER_TWO
-        peer_three=$RADICL_PEER_THREE 
+        peer_three=$RADICL_PEER_THREE
 
         # Seed the Radicle repository
         rad seed $(rad .) --scope followed
@@ -127,8 +126,8 @@ cd ~/.radicle/seed/creature-pigeon
         rad follow $peer_one
         rad follow $peer_two
         rad follow $peer_three
-                    
-        # Register peers to the repository  
+
+        # Register peers to the repository
         echo "Registering peers..."
         rad id update --title "Update node delegate and access" \
                     --description "Add peers as new delegates and permit access to the repository." \
@@ -138,7 +137,7 @@ cd ~/.radicle/seed/creature-pigeon
                     --allow $peer_one \
                     --allow $peer_two \
                     --allow $peer_three \
-                    --no-confirm 
+                    --no-confirm
 
 
         echo "Update Radicle repository..."
@@ -147,5 +146,10 @@ cd ~/.radicle/seed/creature-pigeon
 
 echo "setup.sh script is completed!"
 
+echo "starting up httpd for web UI"
+cd /home/seed/radicle-explorer
+export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
+/home/seed/.radicle-httpd/bin/radicle-httpd & /root/.bun/bin/bun start
+
 # Keep the container to run all the time
-sleep infinity
+#sleep infinity

@@ -1,8 +1,29 @@
 # Get ALPINE image
 FROM alpine:3.14
 
-# Download DEBIAN packages
-RUN apk update && apk add --no-cache bash curl git openssl openssh jq
+# Install packages
+RUN apk update && apk add --no-cache bash curl git openssl openssh jq openrc libgcc gcompat
+
+# install bun
+RUN curl -fsSL https://bun.sh/install | bash
+
+# https://github.com/oven-sh/bun/issues/5545
+# Install glibc to run Bun
+RUN if [[ $(uname -m) == "aarch64" ]] ; \
+    then \
+    # aarch64
+    wget https://raw.githubusercontent.com/squishyu/alpine-pkg-glibc-aarch64-bin/master/glibc-2.26-r1.apk ; \
+    apk add --no-cache --allow-untrusted --force-overwrite glibc-2.26-r1.apk ; \
+    rm glibc-2.26-r1.apk ; \
+    else \
+    # x86_64
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk ; \
+    apk add --no-cache --allow-untrusted --force-overwrite glibc-2.28-r0.apk ; \
+    rm glibc-2.28-r0.apk ; \
+    fi
+
+ENV BUN_INSTALL="/root/.bun"
+RUN chmod -R 777 /root
 
 # Set user and group environment variables
 ENV USER=seed
@@ -12,7 +33,7 @@ ENV GROUP=seed
 COPY initializer.sh /initializer.sh
 
 # Add execute permission to the setup.sh script file
-RUN chmod +x /initializer.sh 
+RUN chmod +x /initializer.sh
 
 # Add seed user and seed group to the system - Alpine
 RUN addgroup -S ${GROUP} && adduser -S -G ${GROUP} ${USER}
@@ -23,7 +44,10 @@ RUN mkdir -p /home/${USER}/.radicle/${USER}
 # Change the ownership of the working directory to seed
 RUN chown -R ${USER}:${GROUP} /home/${USER}
 
-COPY /creature-pigeon /home/seed/creature-pigeon
+COPY creature-pigeon /home/seed/creature-pigeon
+COPY radicle-httpd.service /etc/init.d/radicle-httpd
+RUN chmod +x /etc/init.d/radicle-httpd
+RUN rc-update add radicle-httpd default
 
 RUN chown -R ${USER}:${GROUP} /home/seed/creature-pigeon
 
@@ -38,23 +62,33 @@ ENV RAD_VERSION="1.0.0-rc.10"
 ENV LINUX_SYSTEM="x86_64-unknown-linux-musl"
 ENV OS_TARGET="${RAD_VERSION}-${LINUX_SYSTEM}"
 
-# Install the Radicle package
-RUN curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz
+ENV HTTPD_VERSION="0.15.0"
+ENV HTTPD_OS_TARGET="${HTTPD_VERSION}-${LINUX_SYSTEM}"
 
-# Install the Radicle signature file
+# Install the Radicle packages
+RUN curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz
+RUN curl -O -L https://files.radicle.xyz/releases/radicle-httpd/latest/radicle-httpd-$HTTPD_OS_TARGET.tar.xz
+
+# Install the Radicle signature files
 RUN curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz.sig
+RUN curl -O -L https://files.radicle.xyz/releases/radicle-httpd/latest/radicle-httpd-$HTTPD_OS_TARGET.tar.xz.sig
 
 # Install the Radicle checksum file
 RUN curl -O -L https://files.radicle.xyz/releases/$RAD_VERSION/radicle-$OS_TARGET.tar.xz.sha256
+RUN curl -O -L https://files.radicle.xyz/releases/radicle-httpd/latest/radicle-httpd-$HTTPD_OS_TARGET.tar.xz.sha256
 
-# Verify the Radicle signature
+# Verify the Radicle signatures
 RUN ssh-keygen -Y check-novalidate -n file -s radicle-$OS_TARGET.tar.xz.sig < radicle-$OS_TARGET.tar.xz
+RUN ssh-keygen -Y check-novalidate -n file -s radicle-httpd-$HTTPD_OS_TARGET.tar.xz.sig < radicle-httpd-$HTTPD_OS_TARGET.tar.xz
 
-# Verify the Radicle checksum
+# Verify the Radicle checksums
 RUN sha256sum -c radicle-$OS_TARGET.tar.xz.sha256
+RUN sha256sum -c radicle-httpd-$HTTPD_OS_TARGET.tar.xz.sha256
 
-# Extract the Radicle pacakge
+# Extract the Radicle pacakges
 RUN tar -xvJf radicle-$OS_TARGET.tar.xz --strip-components=1 -C ~/.radicle
+RUN mkdir ~/.radicle-httpd && tar -xvJf radicle-httpd-$HTTPD_OS_TARGET.tar.xz --strip-components=1 -C ~/.radicle-httpd
+RUN chmod +x /home/seed/.radicle-httpd/bin/radicle-httpd
 
 # Set the execution permission for the extracted files
 RUN chmod u+x /home/seed/.radicle/bin/rad
@@ -78,5 +112,23 @@ ENV REPO_NAME=creature-pigeon
 ENV RADICLE_PEER_ONE=did:key:z6MkmesFj9djBn5dyH4vMEAjZeBjCb1BYhKgBMtC2EeeknHn
 ENV RADICLE_PEER_TWO=did:key:z6MkttLTb5NFW3hdMcgTT6f7FW6m7gkE6kosR2uEhg8dJmb1
 ENV RADICLE_PEER_THREE=did:key:z6MknzVNznWdLv1Tj19pLzDsXF5D6SHhjWK6WiMCtop6FK4K
+ENV RADICLE_PEER_FOUR=did:key:z6Mksi9NQFoX7x16TnJKfTbzTcmik6CK5nqkkA88o3dicCHC
 
+# Setting up the UI explorer
+RUN git clone https://github.com/radicle-dev/radicle-interface.git radicle-explorer
+RUN cd radicle-explorer \
+    # switch to explorer version compatible with the version of radicle-httpd
+    && git checkout b105d06fae415769bd20b65f0f4346d40537be78 \
+    # need to nuke the lock file as it's broken
+    && rm -rf package-lock.json \
+    && $BUN_INSTALL/bin/bun install \
+    && $BUN_INSTALL/bin/bun install @rollup/rollup-linux-x64-gnu --save-optional \
+    # Adjust vite config to listen to 0.0.0.0
+    && sed -i 's/localhost/0.0.0.0/g' vite.config.ts \
+    # Adjust default.json entries as they have the garden URLs
+    && sed -i -e 's|https://radicle.zulipchat.com|https://applycreatures.com|g' \
+    -e 's|seed.radicle.garden|creature-pigeon.fly.dev|g' \
+    -e 's|"port": 443,|"port": 8443,|g' config/default.json
+
+ENV LD_LIBRARY_PATH="/usr/lib:/lib:$LD_LIBRARY_PATH"
 ENTRYPOINT ["/initializer.sh"]
