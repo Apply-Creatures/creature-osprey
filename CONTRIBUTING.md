@@ -1,10 +1,10 @@
-# Contributing to creature-pigeon
+# Contributing to creature-osprey
 
-Welcome to **creature-pigeon**! We appreciate your interest in contributing. By participating in this project, you agree to abide by the [Code of Conduct](./CODE_OF_CONDUCT.md).
+Welcome to **creature-osprey**! We appreciate your interest in contributing. By participating in this project, you agree to abide by the [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ## How to Contribute
 
-Contributions to **creature-pigeon** can come in many forms, including but not limited to:
+Contributions to **creature-osprey** can come in many forms, including but not limited to:
 
 - Reporting bugs
 - Suggesting enhancements
@@ -28,7 +28,7 @@ To contribute, follow these steps:
 
 ## Reporting Issues
 
-If you encounter bugs or have suggestions for improvements, please [create an issue](https://github.com/apply-creatures/creature-pigeon/issues/new) on GitHub. Include details such as:
+If you encounter bugs or have suggestions for improvements, please [create an issue](https://github.com/apply-creatures/creature-osprey/issues/new) on GitHub. Include details such as:
 
 - Steps to reproduce
 - Expected behavior
@@ -48,4 +48,4 @@ This project adheres to the [Contributor Covenant Code of Conduct](./CODE_OF_CON
 
 ## License
 
-By contributing to **creature-pigeon**, you agree that your contributions will be licensed under the license. See the [LICENSE](./LICENSE) file for more details.
+By contributing to **creature-osprey**, you agree that your contributions will be licensed under the license. See the [LICENSE](./LICENSE) file for more details.

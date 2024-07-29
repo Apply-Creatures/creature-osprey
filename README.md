@@ -14,7 +14,7 @@
 <br />
 <div align="center">
 
-  <h3 align="center">Creature Pigeon</h3>
+  <h3 align="center">Creature Osprey</h3>
 
    <a href="#">
       <img src="./images/radicle-logo.png" alt="Radicle logo" width="30%">
@@ -130,12 +130,12 @@ If you've truly tried everything and still can't get this to work for you, try t
 ### Set up and run locally
 
 ```bash
-$ git clone https://github.com/apply-creatures/creature-pigeon.git
+$ git clone https://github.com/apply-creatures/creature-osprey.git
 ```
 
 Navigate to the repo root's folder and build the container
 ```bash
-$ cd ./creature-pigeon
+$ cd ./creature-osprey
 ```
 
 1. Build the Docker Image
@@ -161,7 +161,7 @@ docker run --name radicle-node-container -dp 8776:8776 radicle-node-image
 Best is to deploy the thing somewhere. Here is how:
 
 
-**a. "<em>Pigeon! Fly!</em>" - Launch**
+**a. "<em>Osprey! Fly!</em>" - Launch**
 
 ```bash
 # This command will setup your container and deploy it right away. It will create 2 virtual machines by default.  
@@ -318,22 +318,22 @@ It would never end. I've done this work not just off dozens of other people's op
 
 <!-- Refs -->
 
-[codacy-url]: https://app.codacy.com/gh/apply-creatures/creature-pigeon/dashboard
+[codacy-url]: https://app.codacy.com/gh/Apply-Creatures/creature-osprey/dashboard
 [codacy-shield]: https://img.shields.io/codacy/grade/appid?style=for-the-badge
-[contributors-shield]: https://img.shields.io/github/contributors/apply-creatures/creature-pigeon.svg?style=for-the-badge
-[contributors-url]: https://github.com/apply-creatures/creature-pigeon/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/apply-creatures/creature-pigeon.svg?style=for-the-badge
-[forks-url]: https://github.com/apply-creatures/creture-pigeon/network/members
-[stars-shield]: https://img.shields.io/github/stars/apply-creatures/creature-pigeon.svg?style=for-the-badge
-[stars-url]: https://github.com/apply-creatures/creature-pigeon/stargazers
-[issues-shield]: https://img.shields.io/github/issues/apply-creatures/creature-pigeon.svg?style=for-the-badge
-[issues-url]: https://github.com/apply-creatures/creature-pigeon/issues
-[license-shield]: https://img.shields.io/github/license/apply-creatures/creature-pigeon.svg?style=for-the-badge
-[license-url]: https://github.com/apply-creatures/creature-pigeon/blob/main/LICENSE
-[score-shield]: https://img.shields.io/ossf-scorecard/github.com/apply-creatures/creature-pigeon?style=for-the-badge
-[score-url]: https://github.com/apply-creatures/creature-pigeon
-[repo-size-shield]: https://img.shields.io/github/repo-size/apply-creatures/creatrue-pigeon?style=for-the-badge
-[repo-size-url]: https://github.com/apply-creatures/creature-pigeon/archive/refs/heads/main.zip
+[contributors-shield]: https://img.shields.io/github/contributors/apply-creatures/creature-osprey.svg?style=for-the-badge
+[contributors-url]: https://github.com/apply-creatures/creature-osprey/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/apply-creatures/creature-osprey.svg?style=for-the-badge
+[forks-url]: https://github.com/apply-creatures/creture-osprey/network/members
+[stars-shield]: https://img.shields.io/github/stars/apply-creatures/creature-osprey.svg?style=for-the-badge
+[stars-url]: https://github.com/apply-creatures/creature-osprey/stargazers
+[issues-shield]: https://img.shields.io/github/issues/apply-creatures/creature-osprey.svg?style=for-the-badge
+[issues-url]: https://github.com/apply-creatures/creature-osprey/issues
+[license-shield]: https://img.shields.io/github/license/apply-creatures/creature-osprey.svg?style=for-the-badge
+[license-url]: https://github.com/apply-creatures/creature-osprey/blob/main/LICENSE
+[score-shield]: https://img.shields.io/ossf-scorecard/github.com/apply-creatures/creature-osprey?style=for-the-badge
+[score-url]: https://github.com/apply-creatures/creature-osprey
+[repo-size-shield]: https://img.shields.io/github/repo-size/apply-creatures/creatrue-osprey?style=for-the-badge
+[repo-size-url]: https://github.com/apply-creatures/creature-osprey/archive/refs/heads/main.zip
 [product-screenshot]: images/apply-creatures-logo.png
 [ci-shield]: https://ci.applycreatures.com/api/badges/5/status.svg
 [ci-url]: https://ci.applycreatures.com/repos/5

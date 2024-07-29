@@ -29,7 +29,7 @@ RUN chmod -R 777 /root
 ENV USER=seed
 ENV GROUP=seed
 
-ENV NODE_NAME=creature-pigeon
+ENV NODE_NAME=creature-osprey
 
 # Copy the shell script file to the container's filesystem.
 COPY initializer.sh /initializer.sh
@@ -128,7 +128,7 @@ RUN git checkout b105d06fae415769bd20b65f0f4346d40537be78 \
     && sed -i 's/localhost/0.0.0.0/g' vite.config.ts \
     # Adjust default.json entries as they have the garden URLs
     && sed -i -e 's|https://radicle.zulipchat.com|https://applycreatures.com|g' \
-    -e 's|seed.radicle.garden|creature-pigeon.fly.dev|g' \
+    -e 's|seed.radicle.garden|creature-osprey.fly.dev|g' \
     -e 's|"port": 443,|"port": 8443,|g' config/default.json
 
 ENV LD_LIBRARY_PATH="/usr/lib:/lib:$LD_LIBRARY_PATH"
