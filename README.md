@@ -318,7 +318,7 @@ It would never end. I've done this work not just off dozens of other people's op
 
 <!-- Refs -->
 
-[codacy-url]: https://app.codacy.com/gh/apply-creatures/creature-osprey/dashboard
+[codacy-url]: https://app.codacy.com/gh/Apply-Creatures/creature-osprey/dashboard
 [codacy-shield]: https://img.shields.io/codacy/grade/appid?style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/apply-creatures/creature-osprey.svg?style=for-the-badge
 [contributors-url]: https://github.com/apply-creatures/creature-osprey/graphs/contributors
