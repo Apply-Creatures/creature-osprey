@@ -6,6 +6,11 @@
   app = 'creature-pigeon'
   primary_region = 'waw'
 
+  [processes]
+  radicle-httpd = "rc-service radicle-httpd start"
+  app = "eval `ssh-agent` && rad node start"
+  radicle-ui = "cd /home/${USER}/radicle-explorer && bun run start"
+
   [build]
 
   [[mounts]]
@@ -15,18 +20,28 @@
     processes = ['app']
 
   [http_service]
-    internal_port = 80
+    internal_port = 3000
     force_https = true
     auto_stop_machines = true
-    auto_start_machines = true    
+    auto_start_machines = true
     min_machines_running = 0
-    processes = ['app']
+    processes = ['radicle-ui']
+
+  [[services]]
+    internal_port = 8080
+    processes = ["radicle-httpd"]
+    protocol = "tcp"
+
+    [[services.ports]]
+      handlers = ["tls"]
+      port = 8443
 
   [[services]]
     protocol = 'tcp'
     internal_port = 8776
     auto_stop_machines = true
     auto_start_machines = true
+    processes = ['app']
 
     [[services.ports]]
       port = 8776

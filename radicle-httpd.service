@@ -1,0 +1,22 @@
+#!/sbin/openrc-run
+
+description="Radicle HTTP Daemon"
+command="~/.radicle-httpd/radicle-httpd"
+command_args="--listen 0.0.0.0:8080"
+pidfile="/run/radicle-httpd.pid"
+user="seed"
+group="seed"
+environment="RAD_HOME=/home/seed/.radicle/ RUST_BACKTRACE=1 RUST_LOG=info"
+
+depend() {
+    need net
+    after net
+}
+
+start_pre() {
+    checkpath --directory --mode 0755 /run/radicle-httpd.pid
+}
+
+stop_post() {
+    rm -f /run/radicle-httpd.pid
+}
