@@ -319,7 +319,7 @@ It would never end. I've done this work not just off dozens of other people's op
 <!-- Refs -->
 
 [codacy-url]: https://app.codacy.com/gh/Apply-Creatures/creature-osprey/dashboard
-[codacy-shield]: https://img.shields.io/codacy/grade/appid?style=for-the-badge
+[codacy-shield]: https://img.shields.io/codacy/grade/2b83238e2fd44cc2a84791a0b5702281/main?style=for-the-badge
 [contributors-shield]: https://img.shields.io/github/contributors/apply-creatures/creature-osprey.svg?style=for-the-badge
 [contributors-url]: https://github.com/apply-creatures/creature-osprey/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/apply-creatures/creature-osprey.svg?style=for-the-badge
@@ -332,7 +332,7 @@ It would never end. I've done this work not just off dozens of other people's op
 [license-url]: https://github.com/apply-creatures/creature-osprey/blob/main/LICENSE
 [score-shield]: https://img.shields.io/ossf-scorecard/github.com/apply-creatures/creature-osprey?style=for-the-badge
 [score-url]: https://github.com/apply-creatures/creature-osprey
-[repo-size-shield]: https://img.shields.io/github/repo-size/apply-creatures/creatrue-osprey?style=for-the-badge
+[repo-size-shield]: https://img.shields.io/github/repo-size/apply-creatures/creature-osprey?style=for-the-badge
 [repo-size-url]: https://github.com/apply-creatures/creature-osprey/archive/refs/heads/main.zip
 [product-screenshot]: images/apply-creatures-logo.png
 [ci-shield]: https://ci.applycreatures.com/api/badges/5/status.svg
