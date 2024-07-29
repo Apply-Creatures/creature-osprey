@@ -107,6 +107,9 @@ cd ~/.radicle/${USER}/${NODE_NAME}
         # Push the current commit to the main branch
         echo "Pushing to main branch..."
         git push rad main
+        echo "Publishing repo to make it public..."
+
+        rad publish
 
         # Seed the Radicle repository
         rad seed $(rad .) --scope followed
