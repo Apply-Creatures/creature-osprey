@@ -29,10 +29,12 @@ RUN chmod -R 777 /root
 ENV USER=seed
 ENV GROUP=seed
 
+ENV NODE_NAME=creature-pigeon
+
 # Copy the shell script file to the container's filesystem.
 COPY initializer.sh /initializer.sh
 
-# Add execute permission to the setup.sh script file
+# Add permission to the setup.sh script file
 RUN chmod +x /initializer.sh
 
 # Add seed user and seed group to the system - Alpine
@@ -41,6 +43,9 @@ RUN addgroup -S ${GROUP} && adduser -S -G ${GROUP} ${USER}
 # Make directory manually for Alpine
 RUN mkdir -p /home/${USER}/.radicle/${USER}
 
+# copy this repo as it will be added in as pinned demo
+COPY . /home/${USER}/${NODE_NAME}
+
 # Change the ownership of the working directory to seed
 RUN chown -R ${USER}:${GROUP} /home/${USER}
 
@@ -48,7 +53,7 @@ COPY radicle-httpd.service /etc/init.d/radicle-httpd
 RUN chmod +x /etc/init.d/radicle-httpd
 RUN rc-update add radicle-httpd default
 
-RUN chown -R ${USER}:${GROUP} /home/seed/creature-pigeon
+RUN chown -R ${USER}:${GROUP} /home/${USER}/${NODE_NAME}
 
 # Set the user for subsequent instructions
 USER ${USER}
@@ -87,31 +92,27 @@ RUN sha256sum -c radicle-httpd-$HTTPD_OS_TARGET.tar.xz.sha256
 # Extract the Radicle pacakges
 RUN tar -xvJf radicle-$OS_TARGET.tar.xz --strip-components=1 -C ~/.radicle
 RUN mkdir ~/.radicle-httpd && tar -xvJf radicle-httpd-$HTTPD_OS_TARGET.tar.xz --strip-components=1 -C ~/.radicle-httpd
-RUN chmod +x /home/seed/.radicle-httpd/bin/radicle-httpd
+RUN chmod +x /home/${USER}/.radicle-httpd/bin/radicle-httpd
 
 # Set the execution permission for the extracted files
-RUN chmod u+x /home/seed/.radicle/bin/rad
-RUN chmod u+x /home/seed/.radicle/bin/radicle-node
-RUN chmod u+x /home/seed/.radicle/bin/git-remote-rad
+RUN chmod u+x /home/${USER}/.radicle/bin/rad
+RUN chmod u+x /home/${USER}/.radicle/bin/radicle-node
+RUN chmod u+x /home/${USER}/.radicle/bin/git-remote-rad
 
 ENV RAD_PATH_EXPORT='export PATH="$PATH:/home/$USER/.radicle/bin"'
 ENV RAD_PATH="/home/${USER}/.radicle/bin:${PATH}"
-ENV RAD_HOME=/home/seed/.radicle/seed/
-ENV RAD_ALIAS=creature-pigeon
+ENV RAD_HOME=/home/${USER}/.radicle/${USER}/
+ENV RAD_ALIAS=${NODE_NAME}
 
 # Uncomment this and have your own Radicle passphrase if you need to run locally
 # ENV RAD_PASSPHRASE=yoursecret
 
-ENV KEYS_DIR=/home/seed/.radicle/seed/keys/
-ENV REPO_DIR=/home/seed/.radicle/seed/creature-pigeon
-ENV RADICLE_REPO_STORAGE=/home/seed/.radicle/seed/storage/
-ENV REPO_NAME=creature-pigeon
+ENV KEYS_DIR=/home/${USER}/.radicle/${USER}/keys/
+ENV REPO_DIR=/home/${USER}/.radicle/${USER}/${NODE_NAME}
+ENV RADICLE_REPO_STORAGE=/home/${USER}/.radicle/${USER}/storage/
 
-# Peers DID
-ENV RADICLE_PEER_ONE=did:key:z6MkmesFj9djBn5dyH4vMEAjZeBjCb1BYhKgBMtC2EeeknHn
-ENV RADICLE_PEER_TWO=did:key:z6MkttLTb5NFW3hdMcgTT6f7FW6m7gkE6kosR2uEhg8dJmb1
-ENV RADICLE_PEER_THREE=did:key:z6MknzVNznWdLv1Tj19pLzDsXF5D6SHhjWK6WiMCtop6FK4K
-ENV RADICLE_PEER_FOUR=did:key:z6Mksi9NQFoX7x16TnJKfTbzTcmik6CK5nqkkA88o3dicCHC
+# Copy peers DID
+COPY peers.list $REPO_DIR
 
 # Setting up the UI explorer
 RUN git clone https://github.com/radicle-dev/radicle-interface.git radicle-explorer

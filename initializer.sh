@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Move the directory to the destination folder..."
-cp -r /home/seed/creature-pigeon /home/seed/.radicle/seed/
+cp -r /home/${USER}/${NODE_NAME} /home/${USER}/.radicle/${USER}/
 
 # Check if the the file .bashrc exists or not
 if [ ! -f ~/.bashrc ]; then
@@ -42,12 +42,10 @@ else
     # Navigate to the seed folder
     cd ~/.radicle/${USER}/
 
-
     # Set variables to be inserted into the Radicle's config.json file
     config_file="config.json"
-    external_address="creature-pigeon.fly.dev:8776"
+    external_address="${NODE_NAME}.fly.dev:8776"
     listen="0.0.0.0:8776"
-
 
     # Rename external_address and listen fields of the config.json file
     jq --arg external_address "$external_address" --arg listen "$listen" '.node.externalAddresses = [$external_address] | .node.listen = [$listen]' "$config_file" > tmp.$$.json && mv tmp.$$.json $config_file
@@ -72,9 +70,8 @@ rad config
 # Display the Radicle node address
 echo "Your Radicle node address is $(rad node config --addresses)."
 
-
 # Navigate to the Radicle private repository
-cd ~/.radicle/seed/creature-pigeon
+cd ~/.radicle/${USER}/${NODE_NAME}
 
     if [ "$(ls -A $RADICLE_REPO_STORAGE)" ]; then
         echo "There are existing radicle repositories."
@@ -86,12 +83,11 @@ cd ~/.radicle/seed/creature-pigeon
         echo "Initializing git repo..."
         git init --initial-branch=main
 
-
         # Set git user information
         git config --global user.email "bachiro.dev@gmail.com"
         git config --global user.name "Bachiro"
 
-
+        echo " " >> README.md
         # Add the current changes to the staging area
         git add .
 
@@ -100,7 +96,7 @@ cd ~/.radicle/seed/creature-pigeon
 
         # Initialize the Radicle repository
         echo "Initializing Radicle repository..."
-        rad init $REPO_DIR --name $REPO_NAME \
+        rad init $REPO_DIR --name ${NODE_NAME} \
                                         --description "A private repository for Apply Creatures" \
                                         --default-branch main \
                                         --set-upstream \
@@ -108,48 +104,41 @@ cd ~/.radicle/seed/creature-pigeon
                                         --private \
                                         --no-confirm
 
-
         # Push the current commit to the main branch
         echo "Pushing to main branch..."
         git push rad main
 
-
-        # Peers ID
-        peer_one=$RADICLE_PEER_ONE
-        peer_two=$RADICLE_PEER_TWO
-        peer_three=$RADICL_PEER_THREE
-
         # Seed the Radicle repository
         rad seed $(rad .) --scope followed
 
-        # Follow to peers
-        rad follow $peer_one
-        rad follow $peer_two
-        rad follow $peer_three
+        # Follow peers, reads each line of the file that starts with DID
+        export RADICLE_PEERS=$(sed -n '/^did/ {/^$/d; s/^/ /; p}' peers.list | tr -d '\n')
+
+        for peer in "${RADICLE_PEERS[@]}"; do
+          rad follow $peer
+        done
 
         # Register peers to the repository
         echo "Registering peers..."
-        rad id update --title "Update node delegate and access" \
-                    --description "Add peers as new delegates and permit access to the repository." \
-                    --delegate $peer_one \
-                    --delegate $peer_two \
-                    --delegate $peer_three \
-                    --allow $peer_one \
-                    --allow $peer_two \
-                    --allow $peer_three \
-                    --no-confirm
+        # Build the command with all DIDs
+        rad_update_cmd="rad id update --title 'Update node delegate and access' \
+                            --description 'Add peers as new delegates and permit access to the repository.' \
+                            --no-confirm"
 
+        # Loop through the peers array to add --delegate and --allow options
+        for peer in "${RADICLE_PEERS[@]}"; do
+            rad_update_cmd="$rad_update_cmd --delegate $peer --allow $peer"
+        done
 
-        echo "Update Radicle repository..."
+        # Execute the command
+        eval $rad_update_cmd
+
         echo "Your RID is $(rad .)"
     fi
 
 echo "setup.sh script is completed!"
 
-echo "starting up httpd for web UI"
-cd /home/seed/radicle-explorer
+echo "starting up httpd and explorer for web UI"
+cd /home/${USER}/radicle-explorer
 export LD_LIBRARY_PATH=/usr/lib:$LD_LIBRARY_PATH
-/home/seed/.radicle-httpd/bin/radicle-httpd & /root/.bun/bin/bun start
-
-# Keep the container to run all the time
-#sleep infinity
+/home/${USER}/.radicle-httpd/bin/radicle-httpd & /root/.bun/bin/bun start
