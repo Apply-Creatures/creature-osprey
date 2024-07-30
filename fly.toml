@@ -1,57 +1,53 @@
-  # fly.toml app configuration file generated for creature-pigeon on 2024-07-12T16:24:23+07:00
-  #
-  # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-  #
+# fly.toml app configuration file generated for creature-osprey on 2024-07-29T22:17:34+07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-  app = 'creature-osprey'
-  primary_region = 'waw'
+app = 'creature-osprey'
+primary_region = 'waw'
 
-  [processes]
-  radicle-httpd = "rc-service radicle-httpd start"
-  app = "eval `ssh-agent` && rad node start"
-  radicle-ui = "cd /home/${USER}/radicle-explorer && bun run start"
+[build]
 
-  [build]
+[processes]
+  app = 'eval `ssh-agent` && rad node start'
+  radicle-httpd = 'rc-service radicle-httpd start'
+  radicle-ui = 'cd /home/${USER}/radicle-explorer && bun run start'
 
-  [[mounts]]
-    source = 'radicle_volumes'
-    destination = '/home/seed/.radicle/seed'
-    initial_size = '1gb'
-    processes = ['app']
+[[mounts]]
+  source = 'radicle_volumes'
+  destination = '/home/seed/.radicle/seed'
+  initial_size = '1gb'
+  processes = ['app']
 
-  [http_service]
-    internal_port = 3000
-    force_https = true
-    auto_stop_machines = true
-    auto_start_machines = true
-    min_machines_running = 0
-    processes = ['radicle-ui']
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['radicle-ui']
 
-  [[services]]
-    internal_port = 8080
-    processes = ["radicle-httpd"]
-    protocol = "tcp"
+[[services]]
+  protocol = 'tcp'
+  internal_port = 8080
+  processes = ['radicle-httpd']
 
-    [[services.ports]]
-      handlers = ["tls"]
-      port = 8443
+  [[services.ports]]
+    port = 8443
+    handlers = ['tls']
 
-  [[services]]
-    protocol = 'tcp'
-    internal_port = 8776
-    auto_stop_machines = true
-    auto_start_machines = true
-    processes = ['app']
+[[services]]
+  protocol = 'tcp'
+  internal_port = 8776
+  auto_stop_machines = true
+  auto_start_machines = true
+  processes = ['app']
 
-    [[services.ports]]
-      port = 8776
-      handlers = ['tls']
+  [[services.ports]]
+    port = 8776
+    handlers = ['tls']
 
-    [[services.tcp_checks]]
-      interval = '5s'
-      timeout = '1s'
-
-  [[vm]]
-    memory = '1gb'
-    cpu_kind = 'shared'
-    cpus = 1
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
