@@ -71,7 +71,7 @@ rad config
 echo "Your Radicle node address is $(rad node config --addresses)."
 
 # Navigate to the Radicle private repository
-cd ~/.radicle/${USER}/${NODE_NAME}
+cd /home/${USER}/${NODE_NAME}
 
     if [ "$(ls -A $RADICLE_REPO_STORAGE)" ]; then
         echo "There are existing radicle repositories."
