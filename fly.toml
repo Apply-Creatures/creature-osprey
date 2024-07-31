@@ -25,6 +25,8 @@ primary_region = 'waw'
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
+  max_machines_running = 1
+
   processes = ['radicle-ui']
 
 [[services]]
@@ -32,9 +34,9 @@ primary_region = 'waw'
   internal_port = 8080
   processes = ['radicle-httpd']
 
-  [[services.ports]]
-    port = 8443
-    handlers = ['tls']
+[[services.ports]]
+  port = 8443
+  handlers = ['tls']
 
 [[services]]
   protocol = 'tcp'
@@ -43,9 +45,8 @@ primary_region = 'waw'
   auto_start_machines = true
   processes = ['app']
 
-  [[services.ports]]
-    port = 8776
-    handlers = ['tls']
+[[services.ports]]
+  port = 8776
 
 [[vm]]
   memory = '1gb'
