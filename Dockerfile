@@ -110,7 +110,7 @@ ENV RAD_ALIAS=${NODE_NAME}
 ENV KEYS_DIR=/home/${USER}/.radicle/${USER}/keys/
 ENV REPO_DIR=/home/${USER}/.radicle/${USER}/${NODE_NAME}
 ENV RADICLE_REPO_STORAGE=/home/${USER}/.radicle/${USER}/storage/
-
+ENV DOMAIN=applycreatures.com
 # Copy peers DID
 COPY peers.list $REPO_DIR
 
@@ -127,9 +127,14 @@ RUN git checkout b105d06fae415769bd20b65f0f4346d40537be78 \
     # Adjust vite config to listen to 0.0.0.0
     && sed -i 's/localhost/0.0.0.0/g' vite.config.ts \
     # Adjust default.json entries as they have the garden URLs
-    && sed -i -e 's|https://radicle.zulipchat.com|https://applycreatures.com|g' \
-    -e 's|seed.radicle.garden|creature-osprey.fly.dev|g' \
-    -e 's|"port": 443,|"port": 8443,|g' config/default.json
+    && sed -i -e "s|https://radicle.zulipchat.com|https://${DOMAIN}|g" \
+    -e "s|seed.radicle.garden|osprey.${DOMAIN}|g" \
+    -e 's|"port": 443,|"port": 8443,|g' config/default.json \
+    # Exclude some dep that cannot be optimised
+    && sed -i '/export default defineConfig({/a\
+    optimizeDeps: {\
+    exclude: ["twemoji"]\
+    },' vite.config.ts
 
 ENV LD_LIBRARY_PATH="/usr/lib:/lib:$LD_LIBRARY_PATH"
 ENTRYPOINT ["/initializer.sh"]
